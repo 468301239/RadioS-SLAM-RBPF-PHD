@@ -1,6 +1,6 @@
-% clear all;
-% close all;
-% clc;
+clear all;
+close all;
+clc;
 
 % myfilter=history_filters{375};
 %% parameters
@@ -30,8 +30,8 @@ end
 measures=meas_complete{1};
 for i=1:N_p
     ParticleSet{i}=setmeas(ParticleSet{i},measures);
-%     ParticleSet{i}=mapiter(ParticleSet{i});
-    ParticleSet{i}.map=clone(myfilter);
+    ParticleSet{i}=mapiter(ParticleSet{i});
+%     ParticleSet{i}.map=clone(myfilter);
 end
 estimatedStates(:,1)=[0;0;0;0;0];
 history_filters{iter}=ParticleSet{1}.map;
@@ -53,25 +53,27 @@ for iter=2:N
     measures=meas_complete{iter};
     for i=1:N_p
         ParticleSet{i}=setmeas(ParticleSet{i},measures);
-%         ParticleSet{i}=mapiter(ParticleSet{i});
+        ParticleSet{i}=mapiter(ParticleSet{i});
+%         ParticleSet{i}.map=clone(myfilter);
     end
     
     % importance weighting
     weightsum=0;
     for i=1:N_p
-%         ParticleSet{i}=reweight(ParticleSet{i});
-        xtemp=ParticleSet{i}.state(1);
-        ytemp=ParticleSet{i}.state(2);
-        ParticleSet{i}.weight=ParticleSet{i}.weight*multifeaturereweight(meas_complete{iter},ParticleSet{i}.map,[xtemp,ytemp,0.3],100);
+        ParticleSet{i}=reweight(ParticleSet{i});
+%         xtemp=ParticleSet{i}.state(1);
+%         ytemp=ParticleSet{i}.state(2);
+%         ParticleSet{i}.weight=ParticleSet{i}.weight*multifeaturereweight(ParticleSet{i}.measures,ParticleSet{i}.map,[xtemp,ytemp,0.3],100);
         if iter<=N/5
-            z=bsmeascpp(:,iter);
-            mp = struct(OriginPosition = ParticleSet{i}.state');
-            zexp=RngBrgMeasFcnVT([0;0;0],mp);
-            zCov=diag([ParticleSet{i}.map.config.Rngnoiselos^2,ParticleSet{i}.map.config.Brgnoiselos^2]);
-            error = z-zexp;
-            error(2)=normalizeAngles(error(2));
-            md2=error'/zCov*error;
-            ParticleSet{i}.weight=ParticleSet{i}.weight*1/sqrt(det(2*pi*zCov))*exp(-1/2*md2);
+            ParticleSet{i}=reweightlos(ParticleSet{i},bsmeascpp(:,iter));
+%             z=bsmeascpp(:,iter);
+%             mp = struct(OriginPosition = ParticleSet{i}.state');
+%             zexp=RngBrgMeasFcnVT([0;0;0],mp);
+%             zCov=diag([ParticleSet{i}.map.config.Rngnoiselos^2,ParticleSet{i}.map.config.Brgnoiselos^2]);
+%             error = z-zexp;
+%             error(2)=normalizeAngles(error(2));
+%             md2=error'/zCov*error;
+%             ParticleSet{i}.weight=ParticleSet{i}.weight*1/sqrt(det(2*pi*zCov))*exp(-1/2*md2);
         end
         weightsum=weightsum+ParticleSet{i}.weight;
     end
@@ -160,6 +162,12 @@ plot(gtPose(:,2),gtPose(:,3));
 grid on;
 box on;
 axis equal;
+estPose=estimatedStates';
+error=zeros(375,1);
+for i=1:375
+    serror(i)=(estPose(i,1:2)-gtPose(i,2:3))*(estPose(i,1:2)-gtPose(i,2:3))';
+end
+rmse=sqrt(mean()
 %% test
 index=10;
 states=history_phdstates{index};

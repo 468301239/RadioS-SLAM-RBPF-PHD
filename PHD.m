@@ -135,8 +135,7 @@ for t = 0:1/frameRate:duration-1/frameRate
     for j=1:length(meas_complete{index})
         h1=plot([gtPose(index,2),gtPose(index,2)+meas_complete{index}{j}.Measurement(1)*cos(meas_complete{index}{j}.Measurement(2))],[gtPose(index,3),gtPose(index,3)+meas_complete{index}{j}.Measurement(1)*sin(meas_complete{index}{j}.Measurement(2))],'Color',[0,1,0],'LineWidth',2);
     end
-    scatter(0,0,'rs')
-    title('Animated Plot');
+%     scatter(0,0,'rs')
     
     
     hold on;
@@ -151,8 +150,9 @@ for t = 0:1/frameRate:duration-1/frameRate
         plot([10,10+d*cos(theta)],[y,y+d*sin(theta)],'color',[0,0,0],'linewidth',1);
     end
 
-    h3=plot(gtPose(1:index,2),gtPose(1:index,3),'color',[0,0,1],'linewidth',2);
-    scatter(estimatedStates(1,index),estimatedStates(2,index),'filled','b');
+    h3=plot(gtPose(1:index,2),gtPose(1:index,3),'color',[0,0,1],'linewidth',1.5);
+    h4=plot(estimatedStates(1,1:index),estimatedStates(2,1:index),'color',[1,0,0],'linewidth',1.5);
+    scatter(estimatedStates(1,index),estimatedStates(2,index),'filled','r');
     
 %     vts=scatter([0,10],[10,15],70,[1, 0, 0],'filled','^');
 %     vts.MarkerFaceAlpha=0.5;
@@ -163,8 +163,8 @@ for t = 0:1/frameRate:duration-1/frameRate
 %     text(0-1.5,10-2,"VT1",'FontSize',14,'FontName','Times New Roman','HorizontalAlignment','left','Interpreter','latex');
 %     text(10-7.5,-5-2,"Scatterer (VT2, VT4)",'FontSize',14,'FontName','Times New Roman','HorizontalAlignment','left','Interpreter','latex');
 %     text(10-1.5,15-2,"VT3",'FontSize',14,'FontName','Times New Roman','HorizontalAlignment','left','Interpreter','latex');
-    text(-10, -20, ['Step:' num2str(index) ' Pd: 0.95'], 'FontSize', 10, 'FontName', 'Times New Roman', 'HorizontalAlignment', 'right', 'Interpreter', 'latex', 'Color', [1, 0, 0]);
-    text(-10, -23, ['Ellipse: 2 sigma'], 'FontSize', 10, 'FontName', 'Times New Roman', 'HorizontalAlignment', 'right', 'Interpreter', 'latex', 'Color', [1, 0, 0]);
+    text(-10, 20, ['Step:' num2str(index) ' Pd: 0.95'], 'FontSize', 10, 'FontName', 'Times New Roman', 'HorizontalAlignment', 'right', 'Interpreter', 'latex', 'Color', [1, 0, 0]);
+    text(-10, 17, ['Ellipse: 2 sigma'], 'FontSize', 10, 'FontName', 'Times New Roman', 'HorizontalAlignment', 'right', 'Interpreter', 'latex', 'Color', [1, 0, 0]);
     set(gca,'FontName','Times New Roman');
 
     scatter(target(1,:),target(2,:),'r+')
@@ -173,8 +173,8 @@ for t = 0:1/frameRate:duration-1/frameRate
     xlabel("x (m)",'Interpreter','latex','FontSize',16);
     ylabel("y (m)",'Interpreter','latex','FontSize',16);
     
-    title("PHD Mapping with GT Trajectory")
-    legend([h1,h3],"Measurements","Trajectory (GT)");
+    title("PHD SLAM")
+    legend([h1,h3,h4],"Measurements","Trajectory (GT)","Trajectory (Estimated)",'Location', 'southwest');
 
     xlim([-25,30]);
     ylim([-25,30]);
