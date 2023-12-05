@@ -23,8 +23,8 @@ classdef myphd
             obj.config.measurementJacobianFcn = @RngBrgMeasFcnjac;
             obj.config.hasAdditiveMeasurementNoise = true;
             obj.config.Rngnoise=0.3;
-            obj.config.Brgnoise=5*pi/180;
-            obj.config.Rngnoiselos=0.1;
+            obj.config.Brgnoise=4*pi/180;
+            obj.config.Rngnoiselos=0.5;
             obj.config.Brgnoiselos=2*pi/180;
 
             % birth strategy: sigma 2:0.9111, sigma 3: 0.9946

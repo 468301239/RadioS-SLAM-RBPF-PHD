@@ -18,7 +18,7 @@ classdef myparticle
             
             obj.config.ax=0.5;
             obj.config.ay=0.5;
-            obj.config.vb=0.00000000001;
+            obj.config.vb=0.005;
             config.dt=0.08;
             
             obj.A=eye(5);
@@ -60,7 +60,7 @@ classdef myparticle
         
         function obj=reweightlos(obj,losmeas)
             z=losmeas;
-            mp = struct(OriginPosition = obj.state');
+            mp = struct(OriginPosition = [obj.state(1),obj.state(2),obj.state(5)]);
             zexp=RngBrgMeasFcnVT([0;0;0],mp);
             zCov=diag([obj.map.config.Rngnoiselos^2,obj.map.config.Brgnoiselos^2]);
             error = z-zexp;

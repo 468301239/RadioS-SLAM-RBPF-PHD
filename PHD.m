@@ -36,7 +36,7 @@ ending=0;
 
 %% 画图
 h=figure();
-index=38;
+index=N;
 states=history_filters{index}.phd.States;
 statecovariances=history_filters{index}.phd.StateCovariances;
 weights=history_filters{index}.phd.Weights;

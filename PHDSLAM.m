@@ -5,7 +5,7 @@ clc;
 % myfilter=history_filters{375};
 %% parameters
 N_p=100;
-state_init=[8;-10;0;2;0.3];
+state_init=[8;-10;0;1;0.3];
 weight_init=1/N_p;
 N_eff_threshold=50;
 
@@ -33,7 +33,7 @@ for i=1:N_p
     ParticleSet{i}=mapiter(ParticleSet{i});
 %     ParticleSet{i}.map=clone(myfilter);
 end
-estimatedStates(:,1)=[8;-10;0;2;0.3];
+estimatedStates(:,1)=[8;-10;0;1;0.3];
 history_filters{iter}=ParticleSet{1}.map;
 history_phdstates{iter,1}=ParticleSet{1}.map.phd.States;
 history_phdStateCovariances{iter,1}=ParticleSet{1}.map.phd.StateCovariances;

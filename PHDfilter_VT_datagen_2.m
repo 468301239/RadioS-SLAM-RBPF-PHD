@@ -16,12 +16,12 @@ vt8=[5;-5;5*sqrt(10)];
 
 ax=0.5; ay=ax;    % acceleration for each direction m/s^2
 pos_init=[8;-10]; % initial position m
-v_init=[0;2]/sqrt(1);   % initial velocity m/s
+v_init=[0;1]/sqrt(1);   % initial velocity m/s
 
 toarmse=0.3; % m
-toalosrmse=0.3; % m
-aoarmse=5*pi/180;   % rad
-aoalosrmse=5*pi/180;
+toalosrmse=0.05; % m
+aoarmse=4*pi/180;   % rad
+aoalosrmse=2*pi/180;
 bias=0.3;
 R=diag([toarmse^2,aoarmse^2]);
 
