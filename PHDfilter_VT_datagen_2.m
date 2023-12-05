@@ -4,6 +4,8 @@ dt=1/f; % period s
 T=30;   % exp time s
 N=floor(T/dt);
 
+fov=30;
+
 bs=[0;0];
 vt1=[0;10;0];
 vt2=[20;0;0];
@@ -26,7 +28,7 @@ bias=0.3;
 R=diag([toarmse^2,aoarmse^2]);
 
 x=zeros(5,N);
-x(:,1)=[pos_init;v_init;0];
+x(:,1)=[pos_init;v_init;0.3];
 A=eye(5);
 A(1,3)=dt;
 A(2,4)=dt;
@@ -143,6 +145,17 @@ for montecarlo=1:1
     vt6meascpp(1,:)=normalizeRanges(vt6meascpp(1,:));
     vt7meascpp(1,:)=normalizeRanges(vt7meascpp(1,:));
     vt8meascpp(1,:)=normalizeRanges(vt8meascpp(1,:));
+    
+    figure();
+    hold on;
+    plot(vt1meascpp(1,:));
+    plot(vt2meascpp(1,:));
+    plot(vt3meascpp(1,:));
+    plot(vt4meascpp(1,:));
+    plot(vt5meascpp(1,:));
+    plot(vt6meascpp(1,:));
+    plot(vt7meascpp(1,:));
+    plot(vt8meascpp(1,:));
 
     vtmeasurements=cell({vt1meascpp,vt2meascpp,vt3meascpp,vt4meascpp,vt5meascpp,vt6meascpp,vt7meascpp,vt8meascpp});
     % saving
@@ -154,7 +167,7 @@ for montecarlo=1:1
         meas_complete{i}=cell(0,1);
         mp = struct(OriginPosition = [gtPose(i,2:3), bias]);
         for j=1:8
-            if rand()<P_D
+            if rand()<P_D && vtmeasurements{j}(1,i)<fov                
                 tempcell=cell(1,1);
                 tempcell{1,1}=objectDetection((i-1)*dt,vtmeasurements{j}(:,i),'MeasurementNoise',R,MeasurementParameters=mp);
                 meas_complete{i}=[meas_complete{i};tempcell];
@@ -162,7 +175,7 @@ for montecarlo=1:1
         end
         
         for j=1:N_clutter
-            r_clutter=50*rand();
+            r_clutter=fov*rand();
             b_clutter=2*pi*rand()-pi;
             tempcell=cell(1,1);
             tempcell{1,1}=objectDetection((i-1)*dt,[r_clutter;b_clutter],'MeasurementNoise',R,MeasurementParameters=mp);
@@ -174,3 +187,4 @@ for montecarlo=1:1
     print (h, '-dpng', 'dataVT/test.png');
     save('dataVT/meas.mat','meas_complete','target','gtPose','bsmeascpp');
 end
+

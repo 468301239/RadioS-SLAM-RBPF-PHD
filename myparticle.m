@@ -47,7 +47,7 @@ classdef myparticle
         end
         
         function obj=mapiter(obj)
-            obj.map=obj.map.prdupd(obj.measures);
+            obj.map=obj.map.prdupd(obj.measures,[obj.state(1),obj.state(2),obj.state(5)]);
             return;
         end
         

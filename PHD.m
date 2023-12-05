@@ -9,8 +9,6 @@ history_phdStateCovariances=cell(N,1);
 history_weights=cell(N,1);
 history_landmarks=cell(N,1);
 
-
-
 load('dataVT/meas.mat')
 % load('test.mat');
 % for iter=1:N
@@ -21,7 +19,7 @@ load('dataVT/meas.mat')
 
 for iter=1:N
     measures=meas_complete{iter};
-    filter=filter.prdupd(measures);
+    filter=filter.prdupd(measures,[gtPose(iter,2),gtPose(iter,3),gtPose(iter,6)]);
     
     history_filters{iter}=clone(filter);
     
@@ -175,6 +173,7 @@ for t = 0:1/frameRate:duration-1/frameRate
     
     title("PHD SLAM")
     legend([h1,h3,h4],"Measurements","Trajectory (GT)","Trajectory (Estimated)",'Location', 'southwest');
+    legend([h1,h3],"Measurements","Trajectory (GT)",'Location', 'southwest');
 
     xlim([-25,30]);
     ylim([-25,30]);
