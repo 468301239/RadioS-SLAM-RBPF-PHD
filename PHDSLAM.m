@@ -122,7 +122,6 @@ for iter=2:N
             ParticleSet{i}=clone(ParticleSet_resampled{i});
         end
     end
-    
     fprintf('Time: %s/375\n', num2str(iter));
 end
 

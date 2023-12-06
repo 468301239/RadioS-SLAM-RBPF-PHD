@@ -9,7 +9,7 @@ history_phdStateCovariances=cell(N,1);
 history_weights=cell(N,1);
 history_landmarks=cell(N,1);
 
-load('dataVT/meas.mat')
+load('FinalData/Meas_6/meas_1_phd.mat')
 % load('test.mat');
 % for iter=1:N
 %     for count=1:length(meas_complete{iter})
@@ -149,8 +149,8 @@ for t = 0:1/frameRate:duration-1/frameRate
     end
 
     h3=plot(gtPose(1:index,2),gtPose(1:index,3),'color',[0,0,1],'linewidth',1.5);
-    h4=plot(estimatedStates(1,1:index),estimatedStates(2,1:index),'color',[1,0,0],'linewidth',1.5);
-    scatter(estimatedStates(1,index),estimatedStates(2,index),'filled','r');
+%     h4=plot(estimatedStates(1,1:index),estimatedStates(2,1:index),'color',[1,0,0],'linewidth',1.5);
+%     scatter(estimatedStates(1,index),estimatedStates(2,index),'filled','r');
     
 %     vts=scatter([0,10],[10,15],70,[1, 0, 0],'filled','^');
 %     vts.MarkerFaceAlpha=0.5;
@@ -172,7 +172,7 @@ for t = 0:1/frameRate:duration-1/frameRate
     ylabel("y (m)",'Interpreter','latex','FontSize',16);
     
     title("PHD SLAM")
-    legend([h1,h3,h4],"Measurements","Trajectory (GT)","Trajectory (Estimated)",'Location', 'southwest');
+%     legend([h1,h3,h4],"Measurements","Trajectory (GT)","Trajectory (Estimated)",'Location', 'southwest');
     legend([h1,h3],"Measurements","Trajectory (GT)",'Location', 'southwest');
 
     xlim([-25,30]);
