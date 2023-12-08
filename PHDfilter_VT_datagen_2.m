@@ -41,13 +41,13 @@ B=[0.5*dt^2, 0;
 % add dependencies
 addpath('VT_datagen_dependencies');
 %% groundtruth gen
-for montecarlo=1:10
+for montecarlo=1:1
     flag=0;
     while (flag~=1)
         a=[normrnd(0,1,1,N)*ax;normrnd(0,1,1,N)*ay];
         for i=2:N
             x(:,i)=A*x(:,i-1)+B*a(:,i);
-            if or(x(2,i)>5,x(1,i)>10)
+            if or(or(x(2,i)>5,x(1,i)>10),and(x(2,i)<-1,x(1,i)<4))
                 flag=0;
                 break;
             end
@@ -115,15 +115,16 @@ for montecarlo=1:10
 
     gtPosetrans=gtPose';
     for i=1:N
-        bsmeasoriginal(:,i)=[norm(x(1:2,i)-bs)+bias;getAOD([0;0;0],x(:,i),[0;0;0],'LOS');getAOA([0;0;0],x(:,i),[0;0;0],'LOS')'];
-        vt1measoriginal(:,i)=[norm(x(1:2,i)-vt1(1:2))+vt1(3)+bias;getAOD([0;0;0],x(:,i),vt1,'VA');getAOA([0;0;0],x(:,i),vt1,'VA')'];
-        vt2measoriginal(:,i)=[norm(x(1:2,i)-vt2(1:2))+vt2(3)+bias;getAOD([0;0;0],x(:,i),vt2,'VA')';getAOA([0;0;0],x(:,i),vt2,'VA')'];
-        vt3measoriginal(:,i)=[norm(x(1:2,i)-vt3(1:2))+vt3(3)+bias;getAOD([0;0;0],x(:,i),vt3,'SP')';getAOA([0;0;0],x(:,i),vt3,'SP')'];
-        vt4measoriginal(:,i)=[norm(x(1:2,i)-vt4(1:2))+vt4(3)+bias;getAOD([0;0;0],x(:,i),vt4,'VA')';getAOA([0;0;0],x(:,i),vt4,'VA')'];
-        vt5measoriginal(:,i)=[norm(x(1:2,i)-vt5(1:2))+vt5(3)+bias;getAOD([0;0;0],x(:,i),vt3,'SP');getAOA([0;0;0],x(:,i),vt5,'SP')'];
-        vt6measoriginal(:,i)=[norm(x(1:2,i)-vt6(1:2))+vt6(3)+bias;getAOD([0;0;0],x(:,i),vt3,'SP')';getAOA([0;0;0],x(:,i),vt6,'SP')'];
-        vt7measoriginal(:,i)=[norm(x(1:2,i)-vt7(1:2))+vt7(3)+bias;getAOD([0;0;0],x(:,i),vt5,'SP')';getAOA([0;0;0],x(:,i),vt7,'SP')'];
-        vt8measoriginal(:,i)=[norm(x(1:2,i)-vt8(1:2))+vt8(3)+bias;getAOD([0;0;0],x(:,i),vt6,'SP')';getAOA([0;0;0],x(:,i),vt8,'SP')'];
+        alpha=GetAngle(x(3:4,i),[0;0]);
+        bsmeasoriginal(:,i)=[norm(x(1:2,i)-bs)+bias;getAOD([0;0;0],x(:,i),[0;0;0],'LOS');getAOA([0;0;0],x(:,i),[0;0;0],'LOS',alpha)'];
+        vt1measoriginal(:,i)=[norm(x(1:2,i)-vt1(1:2))+vt1(3)+bias;getAOD([0;0;0],x(:,i),vt1,'VA');getAOA([0;0;0],x(:,i),vt1,'VA',alpha)'];
+        vt2measoriginal(:,i)=[norm(x(1:2,i)-vt2(1:2))+vt2(3)+bias;getAOD([0;0;0],x(:,i),vt2,'VA')';getAOA([0;0;0],x(:,i),vt2,'VA',alpha)'];
+        vt3measoriginal(:,i)=[norm(x(1:2,i)-vt3(1:2))+vt3(3)+bias;getAOD([0;0;0],x(:,i),vt3,'SP')';getAOA([0;0;0],x(:,i),vt3,'SP',alpha)'];
+        vt4measoriginal(:,i)=[norm(x(1:2,i)-vt4(1:2))+vt4(3)+bias;getAOD([0;0;0],x(:,i),vt4,'VA')';getAOA([0;0;0],x(:,i),vt4,'VA',alpha)'];
+        vt5measoriginal(:,i)=[norm(x(1:2,i)-vt5(1:2))+vt5(3)+bias;getAOD([0;0;0],x(:,i),vt3,'SP');getAOA([0;0;0],x(:,i),vt5,'SP',alpha)'];
+        vt6measoriginal(:,i)=[norm(x(1:2,i)-vt6(1:2))+vt6(3)+bias;getAOD([0;0;0],x(:,i),vt3,'SP')';getAOA([0;0;0],x(:,i),vt6,'SP',alpha)'];
+        vt7measoriginal(:,i)=[norm(x(1:2,i)-vt7(1:2))+vt7(3)+bias;getAOD([0;0;0],x(:,i),vt5,'SP')';getAOA([0;0;0],x(:,i),vt7,'SP',alpha)'];
+        vt8measoriginal(:,i)=[norm(x(1:2,i)-vt8(1:2))+vt8(3)+bias;getAOD([0;0;0],x(:,i),vt6,'SP')';getAOA([0;0;0],x(:,i),vt8,'SP',alpha)'];
         
         bsmeascpporiginal(:,i)=[norm(gtPosetrans(2:3,i)-bs)+bias;GetAngle([0,0],gtPosetrans(2:3,i))];
         vt1meascpporiginal(:,i)=[norm(gtPosetrans(2:3,i)-vt1(1:2))+vt1(3)+bias;GetAngle(vt1(1:2),gtPosetrans(2:3,i))];
@@ -290,7 +291,7 @@ for montecarlo=1:10
                 v.Time(i).measurement(:,6)=Channel.Values(:,7,i);
                 v.Time(i).measurement(:,7)=Channel.Values(:,8,i);
                 v.Time(i).measurement(:,8)=Channel.Values(:,9,i);
-                countall=4;
+                countall=8;
             end
 
             N_clutter = poissrnd(para.lambda,1);

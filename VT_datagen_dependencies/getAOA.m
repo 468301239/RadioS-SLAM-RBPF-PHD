@@ -1,6 +1,5 @@
-function AOA = getAOA(BS,UE,point,type)
+function AOA = getAOA(BS,UE,point,type,alpha)
    xUE=UE(1:3);                                
-   alpha=UE(4);
    switch(type)
        case('LOS')                      
            AOA=[pi+atan2(UE(2)-point(2),UE(1)-point(1))-alpha  asin((point(3)-UE(3))/norm(point-xUE))];
