@@ -33,7 +33,7 @@ classdef myphd
             obj.config.wb=0.01;
             
             % detection FoV!!! Set it the same with data gen
-            obj.config.fov=30;
+            obj.config.fov=60;
             obj.config.fovscale=0.95;
             
             % detection, survival and clutter intensity
