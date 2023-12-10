@@ -41,13 +41,13 @@ B=[0.5*dt^2, 0;
 % add dependencies
 addpath('VT_datagen_dependencies');
 %% groundtruth gen
-for montecarlo=1:1
+for montecarlo=3:10
     flag=0;
     while (flag~=1)
         a=[normrnd(0,1,1,N)*ax;normrnd(0,1,1,N)*ay];
         for i=2:N
             x(:,i)=A*x(:,i-1)+B*a(:,i);
-            if or(or(x(2,i)>5,x(1,i)>10),and(x(2,i)<-1,x(1,i)<4))
+            if or(x(2,i)>5,x(1,i)>10)
                 flag=0;
                 break;
             end

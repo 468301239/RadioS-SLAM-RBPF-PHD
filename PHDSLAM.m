@@ -5,14 +5,14 @@ clc;
 % myfilter=history_filters{375};
 %% parameters
 N_p=100;
-state_init=[0;0;1;0;0.3];
+state_init=[8;-10;0;1;0.3];
 weight_init=1/N_p;
 N_eff_threshold=50;
 
 % load measurements
-for trajcount=1:10
+for trajcount=3:10
     for meascount=1:10
-        load(['FinalData_4VT/Meas_',num2str(trajcount),'/meas_',num2str(meascount),'_phd.mat'])
+        load(['FinalData/Meas_',num2str(trajcount),'/meas_',num2str(meascount),'_phd.mat'])
         % load('test.mat');
         % priorstates=estimatedStates;
         N=length(meas_complete);
@@ -35,7 +35,7 @@ for trajcount=1:10
             ParticleSet{i}=mapiter(ParticleSet{i});
         %     ParticleSet{i}.map=clone(myfilter);
         end
-        estimatedStates(:,1)=[0;0;1;0;0.3];
+        estimatedStates(:,1)=state_init;
         history_filters{iter}=ParticleSet{1}.map;
         history_phdstates{iter,1}=ParticleSet{1}.map.phd.States;
         history_phdStateCovariances{iter,1}=ParticleSet{1}.map.phd.StateCovariances;
@@ -124,7 +124,7 @@ for trajcount=1:10
                     ParticleSet{i}=clone(ParticleSet_resampled{i});
                 end
             end
-            fprintf('Time: %s/375\n', num2str(iter)); 
+            fprintf('%s th traj, %s th meas, Time: %s/375\n',num2str(trajcount), num2str(meascount), num2str(iter)); 
         end
         
         % 画轨迹图
@@ -172,13 +172,13 @@ for trajcount=1:10
             scatter(meas_complete{index}{j}.Measurement(1)*cos(meas_complete{index}{j}.Measurement(2)),meas_complete{index}{j}.Measurement(1)*sin(meas_complete{index}{j}.Measurement(2)),'g');
         end
 
-        mkdir(['FinalResult_4VT/Meas_',num2str(trajcount)]);
-        print (h, '-dpng', ['FinalResult_4VT/Meas_',num2str(trajcount),'/result_',num2str(meascount),'_phd_traj.jpg']);
-        print (h1, '-dpng', ['FinalResult_4VT/Meas_',num2str(trajcount),'/result_',num2str(meascount),'_phd_map.jpg']);
+        mkdir(['FinalResult/Meas_',num2str(trajcount)]);
+        print (h, '-dpng', ['FinalResult/Meas_',num2str(trajcount),'/result_',num2str(meascount),'_phd_traj.jpg']);
+        print (h1, '-dpng', ['FinalResult/Meas_',num2str(trajcount),'/result_',num2str(meascount),'_phd_map.jpg']);
         close(h);
         close(h1);
 
-        Sp = ['FinalResult_4VT/Meas_',num2str(trajcount),'/result_',num2str(meascount),'_phd.mat'];
+        Sp = ['FinalResult/Meas_',num2str(trajcount),'/result_',num2str(meascount),'_phd.mat'];
         filepath = Sp;
         save(filepath, 'rmse','estimatedStates', 'history_phdstates', 'history_filters', 'history_phdStateCovariances', 'history_weights', 'history_landmarks');
     end
